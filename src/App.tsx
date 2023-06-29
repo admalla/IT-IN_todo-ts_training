@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import './App.css';
 import {TaskType, TodoList} from "./TodoList";
 
-export type TypeFilter = "all" | "active" | "completed"
+export type TypeFilter = "all" | "active" | "completed" | "three"
 
 function App() {
     const [tasks, setTasks] = useState<Array<TaskType>>([
@@ -21,6 +20,8 @@ function App() {
                 return tasks.filter((task:TaskType) => task.isDone === false)
             case "completed":
                 return tasks.filter((task: TaskType) => task.isDone === true)
+            case "three":
+                return tasks.filter((task: TaskType) => task.id < 4)
             default :
                 return tasks
         }
@@ -32,6 +33,10 @@ function App() {
         setTasks(tasks.filter((task: TaskType) => task.id !== id))
     }
 
+    const removeAllTasks = () => {
+        setTasks([])
+    }
+
     return (
         <div className="App">
             <TodoList
@@ -39,9 +44,9 @@ function App() {
                 tasks={filteredTasks}
                 removeTask={removeTask}
                 filterName={filterName}
+                removeAllTasks={removeAllTasks}
             />
         </div>
     );
 }
-
 export default App;
