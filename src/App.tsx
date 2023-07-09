@@ -57,6 +57,7 @@ function App() {
                 removeAllTasks={removeAllTasks}
                 addTask={addTask}
                 onCheckBox={onCheckBox}
+                filter={filter}
             />
         </div>
     );
