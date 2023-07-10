@@ -10,14 +10,16 @@ export type TaskType = {
 }
 
 type PropsType = {
+    id: string
     title: string,
     tasks: Array<TaskType>
-    removeTask: (id: string) => void
-    filterName: (str: TypeFilter) => void
-    removeAllTasks: () => void
-    addTask: (title: string) => void
-    onCheckBox: (id: string) => void
+    removeTask: (id: string, todoListId: string) => void
+    filterName: (str: TypeFilter, todoListId: string) => void
+    removeAllTasks: (todoListId: string) => void
+    addTask: (title: string, todoListId: string) => void
+    onCheckBox: (id: string, todoListId: string) => void
     filter: string
+    removeTodoList: (todoListId: string) => void
 }
 
 export function TodoList(props: PropsType) {
@@ -31,7 +33,7 @@ export function TodoList(props: PropsType) {
 
     const onClickHandler = () => {
         if(title.trim()) {
-            props.addTask(title )
+            props.addTask(title, props.id )
             setTitle('')
         } else {
             setError("Заполните строку!")
@@ -42,7 +44,7 @@ export function TodoList(props: PropsType) {
 
     const onKeyPressHandler = (e:  React.KeyboardEvent<HTMLInputElement>) => {
         if (title.trim() && e.key === 'Enter') {
-            props.addTask(title);
+            props.addTask(title, props.id);
             setTitle('');
         } else {
             setError("Заполните строку!")
@@ -55,7 +57,7 @@ export function TodoList(props: PropsType) {
     return (
         <div>
             <div>
-                <h3>{props.title}</h3>
+                <h3>{props.title} <button onClick={() => props.removeTodoList(props.id)}>X</button> </h3>
                 <div>
                     <input
                         className={error && "error"}
@@ -66,7 +68,7 @@ export function TodoList(props: PropsType) {
                     <button onClick={onClickHandler}>+</button>
                     <div style={{color: "red"}}>{error ? error : ''}</div>
                 </div>
-                <button onClick={props.removeAllTasks} style={{margin: "10px 0"}}>Delete all</button>
+                <button onClick={() => props.removeAllTasks(props.id)} style={{margin: "10px 0"}}>Delete all</button>
                 <ul ref={listRef}>
                     {props.tasks.map((task: TaskType) => {
                         return (
@@ -74,10 +76,10 @@ export function TodoList(props: PropsType) {
                                 <input
                                     type="checkbox"
                                     checked={task.isDone}
-                                    onChange={() => props.onCheckBox(task.id)}
+                                    onChange={() => props.onCheckBox(task.id, props.id)}
                                 />
                                 <span>{task.title}</span>
-                                <button onClick={() => props.removeTask(task.id)}>x</button>
+                                <button onClick={() => props.removeTask(task.id, props.id)}>x</button>
                             </li>
                         )
                     })}
@@ -85,13 +87,13 @@ export function TodoList(props: PropsType) {
 
                 <div>
                     <button className={props.filter === "all" ? "btn-color" : ""}
-                            onClick={() => props.filterName("all")}>All</button>
+                            onClick={() => props.filterName("all", props.id)}>All</button>
                     <button className={props.filter === "active" ? "btn-color" : ""}
-                            onClick={() => props.filterName("active")}>Active</button>
+                            onClick={() => props.filterName("active", props.id)}>Active</button>
                     <button className={props.filter === "completed" ? "btn-color" : ""}
-                            onClick={() => props.filterName("completed")}>Completed</button>
+                            onClick={() => props.filterName("completed", props.id)}>Completed</button>
                     <button className={props.filter === "three" ? "btn-color" : ""}
-                            onClick={() => props.filterName("three")}>Three tasks</button>
+                            onClick={() => props.filterName("three", props.id)}>Three tasks</button>
                 </div>
             </div>
         </div>
