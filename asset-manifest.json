@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/IT-IN_todo-ts_training/static/css/main.93de8a10.css",
+    "main.js": "/IT-IN_todo-ts_training/static/js/main.cecb74f1.js",
+    "index.html": "/IT-IN_todo-ts_training/index.html",
+    "main.93de8a10.css.map": "/IT-IN_todo-ts_training/static/css/main.93de8a10.css.map",
+    "main.cecb74f1.js.map": "/IT-IN_todo-ts_training/static/js/main.cecb74f1.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.93de8a10.css",
+    "static/js/main.cecb74f1.js"
+  ]
+}
