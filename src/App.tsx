@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import {TaskType, TodoList} from "./TodoList";
 import {v1} from "uuid";
+import AddItemTask from "./AddItemTask";
+import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 
-export type TypeFilter = "all" | "active" | "completed" | "three"
+export type TypeFilter = "all" | "active" | "completed"
 type TodoListsType = {
     id: string
     title: string
@@ -10,14 +13,6 @@ type TodoListsType = {
 }
 
 function App() {
-    // const [tasks, setTasks] = useState<Array<TaskType>>([
-    //     { id: v1(), title: "HTML&CSS", isDone: true },
-    //     { id: v1(), title: "JS", isDone: true },
-    //     { id: v1(), title: "ReactJS", isDone: false },
-    //     { id: v1(), title: "HTML", isDone: true },
-    //     { id: v1(), title: "CSS", isDone: false }
-    // ])
-    // const [filter, setFilter] = useState<TypeFilter>("all")
     const filterName = (str: TypeFilter, todoListId: string) => {
         let changeFilter = todoLists.find(tl => tl.id === todoListId)
         if(changeFilter) {
@@ -54,12 +49,22 @@ function App() {
         setTasks({...tasks, [todoListId] :  checked})
     }
 
+    const changeTitleTodoLists = (title: string, todoListId: string) => {
+        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, title} : tl))
+    }
+
+    const changeTitleTask = (title: string, taskId: string, todoListId: string) => {
+        let todoList = tasks[todoListId]
+        let changedTitle = todoList.map(task => task.id === taskId ? {...task, title} : task)
+        setTasks({...tasks, [todoListId] :  changedTitle})
+    }
+
     const todoListId1 = v1()
     const todoListId2 = v1()
 
     const [todoLists, setTodoLists] = useState<Array<TodoListsType>>([
-        {id: todoListId1, title: "React", filter: 'active'},
-        {id: todoListId2, title: "JavaScript", filter: "completed"}
+        {id: todoListId1, title: "React", filter: 'all'},
+        {id: todoListId2, title: "JavaScript", filter: "all"}
     ])
 
     const [tasks, setTasks] = useState({
@@ -77,8 +82,35 @@ function App() {
         ]
     })
 
+    const addTodoList = (title: string) => {
+        let newTodoListId = v1()
+        setTodoLists([{id: newTodoListId, title, filter: 'all'}, ...todoLists])
+        setTasks({ [newTodoListId]: [], ...tasks} )
+    }
+
     return (
+        <>
+            <Box sx={{ flexGrow: 1 }}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{ mr: 2 }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                            News
+                        </Typography>
+                        <Button color="inherit">Login</Button>
+                    </Toolbar>
+                </AppBar>
+            </Box>
         <div className="App">
+            <AddItemTask addItem={addTodoList} />
             {todoLists.map(tl => {
 
                 const getFilteredTasks = (tasks: TaskType[], filter: TypeFilter) => {
@@ -87,8 +119,6 @@ function App() {
                             return tasks.filter((task:TaskType) => task.isDone === false)
                         case "completed":
                             return tasks.filter((task: TaskType) => task.isDone === true)
-                        case "three":
-                            return tasks.filter((task: TaskType, index: number) => index < 3)
                         default :
                             return tasks
                     }
@@ -107,10 +137,13 @@ function App() {
                     onCheckBox={onCheckBox}
                     filter={tl.filter}
                     removeTodoList={removeTodoList}
+                    changeTitleTodoLists={changeTitleTodoLists}
+                    changeTitleTask={changeTitleTask}
                 />
             })}
 
         </div>
+        </>
     );
 }
 export default App;

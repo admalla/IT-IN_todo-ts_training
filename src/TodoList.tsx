@@ -2,6 +2,12 @@ import React, {useRef, useState} from "react";
 import {TypeFilter} from "./App";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
 import './App.css'
+import AddItemTask from "./AddItemTask";
+import EditableTitle from "./EditableTitle";
+import {Button, Paper, Stack} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import Grid from '@mui/material/Unstable_Grid2';
+import Grid2 from "@mui/material/Unstable_Grid2";
 
 export type TaskType = {
     id: string
@@ -20,35 +26,18 @@ type PropsType = {
     onCheckBox: (id: string, todoListId: string) => void
     filter: string
     removeTodoList: (todoListId: string) => void
+    changeTitleTodoLists: (title: string, todoListId: string) => void
+    changeTitleTask: (title: string, taskId: string, todoLIstId: string) => void
 }
 
 export function TodoList(props: PropsType) {
-    const [title, setTitle] = useState<string>('')
-    const [error, setError] = useState<string>("")
 
-    const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.currentTarget.value)
-        setError("")
+    const addTask = (title: string) => {
+        props.addTask(title, props.id)
     }
 
-    const onClickHandler = () => {
-        if(title.trim()) {
-            props.addTask(title, props.id )
-            setTitle('')
-        } else {
-            setError("Заполните строку!")
-        }
-    }
-
-
-
-    const onKeyPressHandler = (e:  React.KeyboardEvent<HTMLInputElement>) => {
-        if (title.trim() && e.key === 'Enter') {
-            props.addTask(title, props.id);
-            setTitle('');
-        } else {
-            setError("Заполните строку!")
-        }
+    const newTitleTodoList = (title: string) => {
+        props.changeTitleTodoLists(title, props.id)
     }
 
 //Animation for li
@@ -56,46 +45,54 @@ export function TodoList(props: PropsType) {
 
     return (
         <div>
-            <div>
-                <h3>{props.title} <button onClick={() => props.removeTodoList(props.id)}>X</button> </h3>
+            <Paper style={{padding: "5px"}} elevation={24}>
                 <div>
-                    <input
-                        className={error && "error"}
-                        value={title}
-                        onChange={onChangeHandler}
-                        onKeyDown={onKeyPressHandler}
-                    />
-                    <button onClick={onClickHandler}>+</button>
-                    <div style={{color: "red"}}>{error ? error : ''}</div>
-                </div>
-                <button onClick={() => props.removeAllTasks(props.id)} style={{margin: "10px 0"}}>Delete all</button>
-                <ul ref={listRef}>
-                    {props.tasks.map((task: TaskType) => {
-                        return (
-                            <li key={task.id} className={task.isDone ? "is-done" : ""}>
-                                <input
-                                    type="checkbox"
-                                    checked={task.isDone}
-                                    onChange={() => props.onCheckBox(task.id, props.id)}
-                                />
-                                <span>{task.title}</span>
-                                <button onClick={() => props.removeTask(task.id, props.id)}>x</button>
-                            </li>
-                        )
-                    })}
-                </ul>
+                    <EditableTitle title={props.title} callBack={newTitleTodoList}/>
+                    <DeleteIcon style={{margin: "0 5px"}} onClick={() => props.removeTodoList(props.id)}
+                                fontSize={"small"}/>
+                    {/*<button onClick={() => props.removeTodoList(props.id)}>X</button>*/}
+                    {/*<h3>{props.title} <button onClick={() => props.removeTodoList(props.id)}>X</button> </h3>*/}
+                    <AddItemTask addItem={addTask}/>
+                    <Button variant="contained" onClick={() => props.removeAllTasks(props.id)}
+                            style={{margin: "10px 0"}}>Delete all</Button>
+                    <Grid container>
+                        <Grid xs={10}>
+                            <ul ref={listRef}>
+                                {props.tasks.map((task: TaskType) => {
+                                    const newTitleTask = (title: string) => {
+                                        props.changeTitleTask(title, task.id, props.id)
+                                    }
+                                    return (
+                                        <li key={task.id} className={task.isDone ? "is-done" : ""}>
+                                            <input
+                                                type="checkbox"
+                                                checked={task.isDone}
+                                                onChange={() => props.onCheckBox(task.id, props.id)}
+                                            />
+                                            {/*<span>{task.title}</span>*/}
+                                            <EditableTitle title={task.title} callBack={newTitleTask}/>
+                                            <DeleteIcon style={{margin: "0 5px"}}
+                                                        onClick={() => props.removeTask(task.id, props.id)}
+                                                        fontSize={"small"}/>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </Grid>
+                    </Grid>
+                    <div>
+                        <Stack spacing={1} direction='row'>
+                            <Button variant={"contained"} className={props.filter === "all" ? "btn-color" : ""}
+                                    onClick={() => props.filterName("all", props.id)}>All</Button>
+                            <Button variant={"contained"} className={props.filter === "active" ? "btn-color" : ""}
+                                    onClick={() => props.filterName("active", props.id)}>Active</Button>
+                            <Button variant={"contained"} className={props.filter === "completed" ? "btn-color" : ""}
+                                    onClick={() => props.filterName("completed", props.id)}>Completed</Button>
+                        </Stack>
 
-                <div>
-                    <button className={props.filter === "all" ? "btn-color" : ""}
-                            onClick={() => props.filterName("all", props.id)}>All</button>
-                    <button className={props.filter === "active" ? "btn-color" : ""}
-                            onClick={() => props.filterName("active", props.id)}>Active</button>
-                    <button className={props.filter === "completed" ? "btn-color" : ""}
-                            onClick={() => props.filterName("completed", props.id)}>Completed</button>
-                    <button className={props.filter === "three" ? "btn-color" : ""}
-                            onClick={() => props.filterName("three", props.id)}>Three tasks</button>
+                    </div>
                 </div>
-            </div>
+            </Paper>
         </div>
     )
 }
