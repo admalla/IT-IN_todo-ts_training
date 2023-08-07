@@ -6,7 +6,7 @@ import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/materia
 import MenuIcon from '@mui/icons-material/Menu';
 
 export type TypeFilter = "all" | "active" | "completed"
-type TodoListsType = {
+export type TodoListsType = {
     id: string
     title: string
     filter: TypeFilter
@@ -103,7 +103,7 @@ function App() {
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            News
+                            TodoList
                         </Typography>
                         <Button color="inherit">Login</Button>
                     </Toolbar>
