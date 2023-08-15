@@ -1,5 +1,6 @@
-import {TodoListsType} from "../App";
-import {TaskType} from "../TodoList";
+import {TaskType} from "../../TodoList";
+import {AddTodoListAT, RemoveTodoListAT, todoListId1, todoListId2} from "./todoList-reducer";
+import {v1} from "uuid";
 
 
 export type TasksType = {
@@ -21,7 +22,6 @@ type changeCheckBoxTaskAT = {
     type: "CHANGE-CHECKBOX-TASK"
     todoListId: string
     taskId: string
-    isDone: boolean
 }
 type changeTitleTaskAT = {
     type: "CHANGE-TITLE-TASK"
@@ -29,37 +29,59 @@ type changeTitleTaskAT = {
     taskId: string
     title: string
 }
-type removeAllTasksByTodoListIdAT = {
-    type: "REMOVE-ALL-TASKS"
-    todoListId: string
+
+type ActionsType = addNewTaskAT | removeTaskAT | changeCheckBoxTaskAT | changeTitleTaskAT | RemoveTodoListAT | AddTodoListAT
+
+const initialState = {
+    [todoListId1]: [
+        { id: v1(), title: "HTML&CSS", isDone: true },
+        { id: v1(), title: "JS", isDone: true },
+        { id: v1(), title: "ReactJS", isDone: false },
+        { id: v1(), title: "HTML", isDone: true },
+        { id: v1(), title: "CSS", isDone: false }
+    ],
+    [todoListId2]: [
+        { id: v1(), title: "Redux", isDone: true },
+        { id: v1(), title: "JSX", isDone: true },
+        { id: v1(), title: "Next", isDone: false },
+    ]
 }
 
-type ActionsType = addNewTaskAT | removeTaskAT | changeCheckBoxTaskAT | changeTitleTaskAT | removeAllTasksByTodoListIdAT
-
-export const taskReducer = (state: TasksType, action: ActionsType): TasksType => {
+export const taskReducer = (state: TasksType = initialState, action: ActionsType): TasksType => {
     switch (action.type) {
         case "ADD-TASK":
-            return {...state,
+            return {
+                ...state,
                 [action.todoListId]:
                     [{id: action.taskId, title: action.title, isDone: false}, ...state[action.todoListId]]
             }
         case "REMOVE-TASK":
-            return {...state,
+            return {
+                ...state,
                 [action.todoListId]:
                     state[action.todoListId].filter(t => t.id !== action.taskId)
             }
         case "CHANGE-CHECKBOX-TASK":
-            return {...state,
+            return {
+                ...state,
                 [action.todoListId]:
-                    state[action.todoListId].map(t => t.id === action.taskId ? {...t, isDone: action.isDone}: t)}
+                    state[action.todoListId].map(t => t.id === action.taskId ? {...t, isDone: !t.isDone} : t)
+            }
         case "CHANGE-TITLE-TASK":
-            return {...state,
+            return {
+                ...state,
                 [action.todoListId]:
-                    state[action.todoListId].map(t => t.id === action.taskId ? {...t, title: action.title}: t)}
-        case "REMOVE-ALL-TASKS": {
+                    state[action.todoListId].map(t => t.id === action.taskId ? {...t, title: action.title} : t)
+            }
+        case "REMOVE-TODOLIST": {
             delete state[action.todoListId]
             return state
         }
+        case "ADD-TODOLIST":
+            return {
+                ...state,
+                [action.id]: []
+            }
         default:
             return state
     }
@@ -76,19 +98,14 @@ export const removeTaskAC = (todoListId: string, taskId: string): removeTaskAT =
     todoListId,
     taskId
 })
-export const changeCheckBoxTaskAC = (todoListId: string, taskId: string, isDone: boolean): changeCheckBoxTaskAT => ({
+export const changeCheckBoxTaskAC = (todoListId: string, taskId: string): changeCheckBoxTaskAT => ({
     type: "CHANGE-CHECKBOX-TASK",
     todoListId,
-    taskId,
-    isDone
+    taskId
 })
 export const changeTitleTaskAC = (todoListId: string, taskId: string, title: string): changeTitleTaskAT => ({
     type: "CHANGE-TITLE-TASK",
     todoListId,
     taskId,
     title
-})
-export const removeAllTasksByTodoListIdAC = (todoListId: string): removeAllTasksByTodoListIdAT => ({
-    type: "REMOVE-ALL-TASKS",
-    todoListId
 })

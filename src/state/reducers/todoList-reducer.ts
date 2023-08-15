@@ -1,12 +1,13 @@
-import {TodoListsType, TypeFilter} from "../App";
+import {TodoListsType, TypeFilter} from "../../App";
+import {v1} from "uuid";
 
-type AddTodoListAT = {
+export type AddTodoListAT = {
     type: "ADD-TODOLIST"
     title: string
     id: string
 }
 
-type RemoveTodoListAT = {
+export type RemoveTodoListAT = {
     type: "REMOVE-TODOLIST"
     todoListId: string
 }
@@ -23,9 +24,17 @@ type changeTitleTodoListAT = {
     title: string
 }
 
-type ActionsType = AddTodoListAT | RemoveTodoListAT | changeFilterTodoListAT | changeTitleTodoListAT
+export type ActionsType = AddTodoListAT | RemoveTodoListAT | changeFilterTodoListAT | changeTitleTodoListAT
 
-export const todoListReducer = (state: Array<TodoListsType>, action: ActionsType): Array<TodoListsType> => {
+export const todoListId1 = v1()
+export const todoListId2 = v1()
+
+const initialState: Array<TodoListsType> = [
+    {id: todoListId1, title: "React", filter: 'all'},
+    {id: todoListId2, title: "JavaScript", filter: "all"}
+]
+
+export const todoListReducer = (state: Array<TodoListsType> = initialState, action: ActionsType): Array<TodoListsType> => {
     switch (action.type) {
         case "ADD-TODOLIST" :
             return [{id: action.id, title: action.title, filter: 'all'}, ...state]

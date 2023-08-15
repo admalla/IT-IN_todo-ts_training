@@ -1,5 +1,6 @@
 import {v1} from "uuid";
-import {removeAllTasksByTodoListIdAC, taskReducer, TasksType} from "./task-reducer";
+import {taskReducer, TasksType} from "./task-reducer";
+import {removeTodoListAC} from "./todoList-reducer";
 
 test("remove all tasks by id todoList", () => {
     const todoListId1 = v1()
@@ -20,8 +21,8 @@ test("remove all tasks by id todoList", () => {
         ]
     }
 
-    const endTasks = taskReducer(tasks, removeAllTasksByTodoListIdAC(todoListId2))
+    const endTasks = taskReducer(tasks, removeTodoListAC(todoListId2))
 
-    expect(Object.keys(tasks).length).toBe(1)
-    expect(tasks[todoListId2]).toBeUndefined()
+    expect(Object.keys(endTasks).length).toBe(1)
+    expect(endTasks[todoListId2]).toBeUndefined()
 })

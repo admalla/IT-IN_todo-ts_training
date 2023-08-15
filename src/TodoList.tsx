@@ -21,7 +21,6 @@ type PropsType = {
     tasks: Array<TaskType>
     removeTask: (id: string, todoListId: string) => void
     filterName: (str: TypeFilter, todoListId: string) => void
-    removeAllTasks: (todoListId: string) => void
     addTask: (title: string, todoListId: string) => void
     onCheckBox: (id: string, todoListId: string) => void
     filter: string
@@ -50,11 +49,7 @@ export function TodoList(props: PropsType) {
                     <EditableTitle title={props.title} callBack={newTitleTodoList}/>
                     <DeleteIcon style={{margin: "0 5px"}} onClick={() => props.removeTodoList(props.id)}
                                 fontSize={"small"}/>
-                    {/*<button onClick={() => props.removeTodoList(props.id)}>X</button>*/}
-                    {/*<h3>{props.title} <button onClick={() => props.removeTodoList(props.id)}>X</button> </h3>*/}
                     <AddItemTask addItem={addTask}/>
-                    <Button variant="contained" onClick={() => props.removeAllTasks(props.id)}
-                            style={{margin: "10px 0"}}>Delete all</Button>
                     <Grid container>
                         <Grid xs={10}>
                             <ul ref={listRef}>
@@ -69,7 +64,6 @@ export function TodoList(props: PropsType) {
                                                 checked={task.isDone}
                                                 onChange={() => props.onCheckBox(task.id, props.id)}
                                             />
-                                            {/*<span>{task.title}</span>*/}
                                             <EditableTitle title={task.title} callBack={newTitleTask}/>
                                             <DeleteIcon style={{margin: "0 5px"}}
                                                         onClick={() => props.removeTask(task.id, props.id)}
