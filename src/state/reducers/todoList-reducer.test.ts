@@ -1,5 +1,5 @@
 import {v1} from "uuid";
-import {TodoListsType} from "../../App";
+import {TodoListsType} from "../../App/App";
 import {
     addTodoListAC,
     changeFilterTodoListAC,
@@ -8,14 +8,22 @@ import {
     todoListReducer
 } from "./todoList-reducer";
 
-test("add todoList", () => {
-    const todoListId1 = v1()
-    const todoListId2 = v1()
+let todoListId1: string;
+let todoListId2: string;
 
-    const todoLists: TodoListsType[] = [
+let todoLists: TodoListsType[]
+
+beforeEach(() => {
+    todoListId1 = v1()
+    todoListId2 = v1()
+
+    todoLists = [
         {id: todoListId1, title: "React", filter: 'all'},
         {id: todoListId2, title: "JavaScript", filter: "all"}
     ]
+})
+
+test("add todoList", () => {
 
     const todoListId = v1()
     const endTodoList = todoListReducer(todoLists, addTodoListAC('HTML', todoListId))
@@ -25,14 +33,6 @@ test("add todoList", () => {
 })
 
 test("remove todoList", () => {
-    const todoListId1 = v1()
-    const todoListId2 = v1()
-
-    const todoLists: TodoListsType[] = [
-        {id: todoListId1, title: "React", filter: 'all'},
-        {id: todoListId2, title: "JavaScript", filter: "all"}
-    ]
-
 
     const endTodoList = todoListReducer(todoLists, removeTodoListAC(todoListId1))
 
@@ -41,14 +41,6 @@ test("remove todoList", () => {
 })
 
 test("change filter todoList", () => {
-    const todoListId1 = v1()
-    const todoListId2 = v1()
-
-    const todoLists: TodoListsType[] = [
-        {id: todoListId1, title: "React", filter: 'all'},
-        {id: todoListId2, title: "JavaScript", filter: "all"}
-    ]
-
 
     const endTodoList = todoListReducer(todoLists, changeFilterTodoListAC(todoListId1, "active"))
 
@@ -57,14 +49,6 @@ test("change filter todoList", () => {
 })
 
 test("change title todoList", () => {
-    const todoListId1 = v1()
-    const todoListId2 = v1()
-
-    const todoLists: TodoListsType[] = [
-        {id: todoListId1, title: "React", filter: 'all'},
-        {id: todoListId2, title: "JavaScript", filter: "all"}
-    ]
-
 
     const endTodoList = todoListReducer(todoLists, changeTitleTodoListAC(todoListId1, "What is up"))
 

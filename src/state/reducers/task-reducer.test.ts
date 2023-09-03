@@ -8,12 +8,16 @@ import {
     TasksType
 } from "./task-reducer";
 
-test("add new task", () => {
+let todoListId1: string;
+let todoListId2: string;
 
-    const todoListId1 = v1()
-    const todoListId2 = v1()
+let tasks: TasksType;
 
-    const tasks: TasksType = {
+beforeEach(() => {
+    todoListId1 = v1()
+    todoListId2 = v1()
+
+    tasks = {
         [todoListId1]: [
             {id: v1(), title: "HTML&CSS", isDone: true},
             {id: v1(), title: "JS", isDone: true},
@@ -27,6 +31,9 @@ test("add new task", () => {
             {id: v1(), title: "Next", isDone: false},
         ]
     }
+})
+
+test("add new task", () => {
 
     const taskId = v1()
     const endTasks = taskReducer(tasks, addNewTaskAC(todoListId2, taskId, "new Task"))
@@ -35,24 +42,6 @@ test("add new task", () => {
     expect(endTasks[todoListId2][0].title).toBe("new Task")
 })
 test("remove task", () => {
-
-    const todoListId1 = v1()
-    const todoListId2 = v1()
-
-    const tasks: TasksType = {
-        [todoListId1]: [
-            {id: v1(), title: "HTML&CSS", isDone: true},
-            {id: v1(), title: "JS", isDone: true},
-            {id: v1(), title: "ReactJS", isDone: false},
-            {id: v1(), title: "HTML", isDone: true},
-            {id: v1(), title: "CSS", isDone: false}
-        ],
-        [todoListId2]: [
-            {id: v1(), title: "Redux", isDone: true},
-            {id: v1(), title: "JSX", isDone: true},
-            {id: v1(), title: "Next", isDone: false},
-        ]
-    }
 
     const taskId = tasks[todoListId1][3].id
     const endTasks = taskReducer(tasks, removeTaskAC(todoListId1, taskId))
@@ -63,24 +52,7 @@ test("remove task", () => {
 })
 test("change checkbox task", () => {
 
-    const todoListId1 = v1()
-    const todoListId2 = v1()
-
-    const tasks: TasksType = {
-        [todoListId1]: [
-            {id: v1(), title: "HTML&CSS", isDone: true},
-            {id: v1(), title: "JS", isDone: true},
-            {id: v1(), title: "ReactJS", isDone: false},
-            {id: v1(), title: "HTML", isDone: true},
-            {id: v1(), title: "CSS", isDone: false}
-        ],
-        [todoListId2]: [
-            {id: v1(), title: "Redux", isDone: true},
-            {id: v1(), title: "JSX", isDone: true},
-            {id: v1(), title: "Next", isDone: false},
-        ]
-    }
-const taskId = tasks[todoListId2][0].id
+    const taskId = tasks[todoListId2][0].id
     const endTasks = taskReducer(tasks, changeCheckBoxTaskAC(todoListId2, taskId))
 
     expect(endTasks[todoListId2][0].isDone).not.toBe(true)
@@ -88,24 +60,7 @@ const taskId = tasks[todoListId2][0].id
 })
 test("change title task", () => {
 
-    const todoListId1 = v1()
-    const todoListId2 = v1()
-
-    const tasks: TasksType = {
-        [todoListId1]: [
-            {id: v1(), title: "HTML&CSS", isDone: true},
-            {id: v1(), title: "JS", isDone: true},
-            {id: v1(), title: "ReactJS", isDone: false},
-            {id: v1(), title: "HTML", isDone: true},
-            {id: v1(), title: "CSS", isDone: false}
-        ],
-        [todoListId2]: [
-            {id: v1(), title: "Redux", isDone: true},
-            {id: v1(), title: "JSX", isDone: true},
-            {id: v1(), title: "Next", isDone: false},
-        ]
-    }
-const taskId = tasks[todoListId2][0].id
+    const taskId = tasks[todoListId2][0].id
     const endTasks = taskReducer(tasks, changeTitleTaskAC(todoListId2, taskId, "React"))
 
     expect(endTasks[todoListId2][0].title).not.toBe("Redux")

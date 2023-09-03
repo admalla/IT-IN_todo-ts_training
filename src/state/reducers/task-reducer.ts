@@ -32,20 +32,7 @@ type changeTitleTaskAT = {
 
 type ActionsType = addNewTaskAT | removeTaskAT | changeCheckBoxTaskAT | changeTitleTaskAT | RemoveTodoListAT | AddTodoListAT
 
-const initialState = {
-    [todoListId1]: [
-        { id: v1(), title: "HTML&CSS", isDone: true },
-        { id: v1(), title: "JS", isDone: true },
-        { id: v1(), title: "ReactJS", isDone: false },
-        { id: v1(), title: "HTML", isDone: true },
-        { id: v1(), title: "CSS", isDone: false }
-    ],
-    [todoListId2]: [
-        { id: v1(), title: "Redux", isDone: true },
-        { id: v1(), title: "JSX", isDone: true },
-        { id: v1(), title: "Next", isDone: false },
-    ]
-}
+const initialState: TasksType = {}
 
 export const taskReducer = (state: TasksType = initialState, action: ActionsType): TasksType => {
     switch (action.type) {

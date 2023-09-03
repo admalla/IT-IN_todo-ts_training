@@ -1,13 +1,12 @@
-import React, {useRef, useState} from "react";
-import {TypeFilter} from "./App";
+import React, {useCallback} from "react";
+import {TypeFilter} from "./App/App";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
-import './App.css'
-import AddItemTask from "./AddItemTask";
-import EditableTitle from "./EditableTitle";
-import {Button, Paper, Stack} from "@mui/material";
+import './App/App.css'
+import AddItemTask from "./AddItemTask/AddItemTask";
+import EditableTitle from "./EditableTitle/EditableTitle";
+import {Button, Stack} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import Grid from '@mui/material/Unstable_Grid2';
-import Grid2 from "@mui/material/Unstable_Grid2";
+import {Task} from "./Task";
 
 export type TaskType = {
     id: string
@@ -15,7 +14,7 @@ export type TaskType = {
     isDone: boolean
 }
 
-type PropsType = {
+export type PropsType = {
     id: string
     title: string,
     tasks: Array<TaskType>
@@ -23,70 +22,69 @@ type PropsType = {
     filterName: (str: TypeFilter, todoListId: string) => void
     addTask: (title: string, todoListId: string) => void
     onCheckBox: (id: string, todoListId: string) => void
-    filter: string
+    filter: TypeFilter
     removeTodoList: (todoListId: string) => void
     changeTitleTodoLists: (title: string, todoListId: string) => void
     changeTitleTask: (title: string, taskId: string, todoLIstId: string) => void
 }
 
-export function TodoList(props: PropsType) {
+export const TodoList = React.memo( (props: PropsType) => {
 
-    const addTask = (title: string) => {
+    const getFilteredTasks = (tasks: TaskType[], filter: TypeFilter) => {
+        switch (filter) {
+            case "active" :
+                return tasks.filter((task:TaskType) => task.isDone === false)
+            case "completed":
+                return tasks.filter((task: TaskType) => task.isDone === true)
+            default :
+                return tasks
+        }
+    }
+
+    const filteredTasks: Array<TaskType> =  getFilteredTasks(props.tasks, props.filter)
+
+    const addTask = useCallback( (title: string) => {
         props.addTask(title, props.id)
-    }
+    }, [props.addTask, props.id])
 
-    const newTitleTodoList = (title: string) => {
+    const newTitleTodoList = useCallback( (title: string) => {
         props.changeTitleTodoLists(title, props.id)
-    }
+    }, [props.changeTitleTodoLists, props.id])
 
 //Animation for li
     const [listRef] = useAutoAnimate<HTMLUListElement>()
 
     return (
         <div>
-            <Paper style={{padding: "5px"}} elevation={24}>
+            <div>
+                <EditableTitle title={props.title} callBack={newTitleTodoList}/>
+                <DeleteIcon style={{margin: "0 5px"}} onClick={() => props.removeTodoList(props.id)}
+                            fontSize={"small"}/>
+                <AddItemTask addItem={addTask}/>
+                <ul ref={listRef}>
+                    {filteredTasks.map((task: TaskType) =>
+                        <Task
+                            key={task.id}
+                            onCheckBox={props.onCheckBox}
+                            changeTitleTask={props.changeTitleTask}
+                            removeTask={props.removeTask}
+                            todoListId={props.id}
+                            task={task}
+                        />
+                    )}
+                </ul>
                 <div>
-                    <EditableTitle title={props.title} callBack={newTitleTodoList}/>
-                    <DeleteIcon style={{margin: "0 5px"}} onClick={() => props.removeTodoList(props.id)}
-                                fontSize={"small"}/>
-                    <AddItemTask addItem={addTask}/>
-                    <Grid container>
-                        <Grid xs={10}>
-                            <ul ref={listRef}>
-                                {props.tasks.map((task: TaskType) => {
-                                    const newTitleTask = (title: string) => {
-                                        props.changeTitleTask(title, task.id, props.id)
-                                    }
-                                    return (
-                                        <li key={task.id} className={task.isDone ? "is-done" : ""}>
-                                            <input
-                                                type="checkbox"
-                                                checked={task.isDone}
-                                                onChange={() => props.onCheckBox(task.id, props.id)}
-                                            />
-                                            <EditableTitle title={task.title} callBack={newTitleTask}/>
-                                            <DeleteIcon style={{margin: "0 5px"}}
-                                                        onClick={() => props.removeTask(task.id, props.id)}
-                                                        fontSize={"small"}/>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </Grid>
-                    </Grid>
-                    <div>
-                        <Stack spacing={1} direction='row'>
-                            <Button variant={"contained"} className={props.filter === "all" ? "btn-color" : ""}
-                                    onClick={() => props.filterName("all", props.id)}>All</Button>
-                            <Button variant={"contained"} className={props.filter === "active" ? "btn-color" : ""}
-                                    onClick={() => props.filterName("active", props.id)}>Active</Button>
-                            <Button variant={"contained"} className={props.filter === "completed" ? "btn-color" : ""}
-                                    onClick={() => props.filterName("completed", props.id)}>Completed</Button>
-                        </Stack>
-
-                    </div>
+                    <Stack spacing={1} direction='row'>
+                        <Button variant={"contained"} className={props.filter === "all" ? "btn-color" : ""}
+                                onClick={() => props.filterName("all", props.id)}>All</Button>
+                        <Button variant={"contained"} className={props.filter === "active" ? "btn-color" : ""}
+                                onClick={() => props.filterName("active", props.id)}>Active</Button>
+                        <Button variant={"contained"}
+                                className={props.filter === "completed" ? "btn-color" : ""}
+                                onClick={() => props.filterName("completed", props.id)}>Completed</Button>
+                    </Stack>
                 </div>
-            </Paper>
+            </div>
         </div>
     )
-}
+})
