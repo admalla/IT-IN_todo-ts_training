@@ -26,6 +26,6 @@ type Story = StoryObj<typeof AddItemTask>;
 
 export const Basic: Story = {
     args: {
-        addItem: action("new List")
+        addItem: action("add List")
     }
 }
