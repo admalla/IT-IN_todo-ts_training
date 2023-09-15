@@ -6,13 +6,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Grid from "@mui/material/Unstable_Grid2";
 import {useApp} from "./hook/useApp";
 
-export type TypeFilter = "all" | "active" | "completed"
-export type TodoListsType = {
-    id: string
-    title: string
-    filter: TypeFilter
-}
-
 function App() {
     const {
         tasks,
@@ -26,7 +19,7 @@ function App() {
         onCheckBox,
         changeFilterTodoList
     } = useApp()
-
+    console.log(todoLists)
     return (
             <div className="App">
                 <AppBar position="static">

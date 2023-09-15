@@ -1,5 +1,4 @@
-import React, {useCallback} from "react";
-import {TypeFilter} from "./App/App";
+import React, {useCallback, useEffect} from "react";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
 import './App/App.css'
 import AddItemTask from "./AddItemTask/AddItemTask";
@@ -7,17 +6,18 @@ import EditableTitle from "./EditableTitle/EditableTitle";
 import {Button, Stack} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Task} from "./Task";
-
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+import {TaskAPIType, TaskStatuses} from "./api/TaskAPI";
+import {TypeFilter} from "./state/reducers/todoList-reducer";
+import {useDispatch} from "react-redux";
+import {getTasksFromServerTC} from "./state/reducers/task-reducer";
+import {ThunkDispatch} from "redux-thunk";
+import {AppRootState} from "./state/Store";
+import {AnyAction} from "redux";
 
 export type PropsType = {
     id: string
     title: string,
-    tasks: Array<TaskType>
+    tasks: Array<TaskAPIType>
     removeTask: (id: string, todoListId: string) => void
     filterName: (str: TypeFilter, todoListId: string) => void
     addTask: (title: string, todoListId: string) => void
@@ -30,18 +30,25 @@ export type PropsType = {
 
 export const TodoList = React.memo( (props: PropsType) => {
 
-    const getFilteredTasks = (tasks: TaskType[], filter: TypeFilter) => {
+    const dispatch = useDispatch<ThunkDispatch<AppRootState, any, AnyAction> >()
+
+    useEffect(() => {
+        dispatch(getTasksFromServerTC(props.id))
+    }, []);
+
+
+    const getFilteredTasks = (tasks: TaskAPIType[], filter: TypeFilter) => {
         switch (filter) {
             case "active" :
-                return tasks.filter((task:TaskType) => task.isDone === false)
+                return tasks.filter((task:TaskAPIType) => task.status === TaskStatuses.New)
             case "completed":
-                return tasks.filter((task: TaskType) => task.isDone === true)
+                return tasks.filter((task: TaskAPIType) => task.status === TaskStatuses.Completed)
             default :
                 return tasks
         }
     }
 
-    const filteredTasks: Array<TaskType> =  getFilteredTasks(props.tasks, props.filter)
+    const filteredTasks: Array<TaskAPIType> =  getFilteredTasks(props.tasks, props.filter)
 
     const addTask = useCallback( (title: string) => {
         props.addTask(title, props.id)
@@ -53,16 +60,15 @@ export const TodoList = React.memo( (props: PropsType) => {
 
 //Animation for li
     const [listRef] = useAutoAnimate<HTMLUListElement>()
-
     return (
         <div>
             <div>
                 <EditableTitle title={props.title} callBack={newTitleTodoList}/>
-                <DeleteIcon style={{margin: "0 5px"}} onClick={() => props.removeTodoList(props.id)}
+                <DeleteIcon style={{margin: "0 5px", cursor: 'pointer'}} onClick={() => props.removeTodoList(props.id)}
                             fontSize={"small"}/>
                 <AddItemTask addItem={addTask}/>
                 <ul ref={listRef}>
-                    {filteredTasks.map((task: TaskType) =>
+                    {filteredTasks.map((task: TaskAPIType) =>
                         <Task
                             key={task.id}
                             onCheckBox={props.onCheckBox}

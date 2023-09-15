@@ -1,23 +1,32 @@
 import {instance} from "./instance";
+import {TodoListWithFilterType} from "../state/reducers/todoList-reducer";
 
-type TodoListType = {
+export type TodoListAPIType = {
     id: string
     title: string
     addedDate: string
     order: number
 }
 
-export const todolistsAPI = {
+export type TodolistResponseType<T = {}> = {
+    resultCode: number
+    messages: Array<string>
+    fieldsErrors: Array<string>
+    data: T
+}
+
+
+export const TodolistsAPI = {
     getTodolists() {
-        return instance.get<Array<TodoListType>>("todo-lists")
+        return instance.get<Array<TodoListWithFilterType>>("todo-lists")
     },
     createTodoList(title: string) {
-        return instance.post<Array<TodoListType>>('todo-lists', {title})
+        return instance.post<TodolistResponseType<{item: TodoListAPIType}>>('todo-lists', {title})
     },
     updateTodolist(id: string, title: string) {
-        return instance.put<Array<TodoListType>>(`todo-lists/${id}`, {title})
+        return instance.put<TodolistResponseType>(`todo-lists/${id}`, {title})
     },
     deleteTodolist(id: string) {
-        return instance.delete<Array<TodoListType>>(`todo-lists/${id}`)
+        return instance.delete<TodolistResponseType>(`todo-lists/${id}`)
     }
 }

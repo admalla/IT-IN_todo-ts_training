@@ -1,35 +1,38 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "../../state/Store";
 import {
-    addNewTaskAC,
+    addTaskFromServerTC,
     changeCheckBoxTaskAC,
-    changeTitleTaskAC,
-    removeTaskAC,
-    TasksType
+    removeTaskFromServerTC,
+    TasksType, updateTitleTaskFromServerTC
 } from "../../state/reducers/task-reducer";
-import {useCallback} from "react";
-import {v1} from "uuid";
+import {useCallback, useEffect} from "react";
 import {
-    addTodoListAC,
-    changeFilterTodoListAC,
-    changeTitleTodoListAC,
-    removeTodoListAC
+    addTodolistFromServerTC,
+    changeFilterTodoListAC, changeTitleTLFromServerTC,
+    getTodoListDomainTC, removeTodolistFromServerTC, TodoListWithFilterType, TypeFilter
 } from "../../state/reducers/todoList-reducer";
-import {TodoListsType, TypeFilter} from "../App";
+import {ThunkDispatch} from "redux-thunk";
+import {AnyAction} from "redux";
 
 export const useApp = () => {
-    const dispatch = useDispatch()
 
-    const todoLists = useSelector<AppRootState, Array<TodoListsType>>(state => state.todoLists)
+    const dispatch = useDispatch<ThunkDispatch<AppRootState, any, AnyAction>>()
+
+    const todoLists = useSelector<AppRootState, Array<TodoListWithFilterType>>(state => state.todoLists)
     const tasks = useSelector<AppRootState, TasksType>(state => state.tasks)
 
+    useEffect(() => {
+        dispatch(getTodoListDomainTC())
+    }, []);
+
+
     const addTodoList = useCallback((title: string) => {
-        let newTodoListId = v1()
-        dispatch(addTodoListAC(title, newTodoListId))
+        dispatch(addTodolistFromServerTC(title))
     }, [])
 
     const removeTodoList = useCallback((todoListId: string) => {
-        dispatch(removeTodoListAC(todoListId))
+        dispatch(removeTodolistFromServerTC(todoListId))
     }, [])
 
     const changeFilterTodoList = useCallback((str: TypeFilter, todoListId: string) => {
@@ -37,16 +40,15 @@ export const useApp = () => {
     }, [])
 
     const changeTitleTodoLists = useCallback((title: string, todoListId: string) => {
-        dispatch(changeTitleTodoListAC(todoListId, title))
+        dispatch(changeTitleTLFromServerTC(title, todoListId))
     }, [])
 
     const removeTask = useCallback((id: string, todoListId: string) => {
-        dispatch(removeTaskAC(todoListId, id))
+        dispatch(removeTaskFromServerTC(todoListId, id))
     }, [])
 
     const addTask = useCallback((title: string, todoListId: string) => {
-        let taskId = v1()
-        dispatch(addNewTaskAC(todoListId, taskId, title))
+        dispatch(addTaskFromServerTC(todoListId, title))
     }, [])
 
     const onCheckBox = useCallback((id: string, todoListId: string) => {
@@ -54,7 +56,7 @@ export const useApp = () => {
     }, [])
 
     const changeTitleTask = useCallback((title: string, taskId: string, todoListId: string) => {
-        dispatch(changeTitleTaskAC(todoListId, taskId, title))
+        dispatch(updateTitleTaskFromServerTC(todoListId, taskId, title))
     }, [])
 
     return {

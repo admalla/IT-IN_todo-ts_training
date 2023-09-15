@@ -5,7 +5,7 @@ import {TaskAPI} from "../../api/TaskAPI";
 export const GetTasks = () => {
     const [tasks, setTasks] = useState<any>(null)
 
-    const todolistId = "39669962-c33d-4432-8b90-1155dbca7fb3"
+    const todolistId = "509cebcf-5b5c-4955-b72f-744d695e15c4"
 
     useEffect(() => {
         TaskAPI.getTasks(todolistId).then(res => setTasks(res.data))
@@ -17,10 +17,10 @@ export const GetTasks = () => {
 export const CreateTask = () => {
     const [tasks, setTasks] = useState<any>(null)
 
-    const todolistId = "39669962-c33d-4432-8b90-1155dbca7fb3"
+    const todolistId = "509cebcf-5b5c-4955-b72f-744d695e15c4"
 
     useEffect(() => {
-        TaskAPI.createTask(todolistId, "new Task").then(res => setTasks(res.data))
+        TaskAPI.createTask(todolistId, "NEW Task").then(res => setTasks(res.data.data))
     }, []);
 
     return <div>{JSON.stringify(tasks)}</div>
@@ -29,11 +29,11 @@ export const CreateTask = () => {
 export const UpdateTask = () => {
     const [tasks, setTasks] = useState<any>(null)
 
-    const todolistId = "39669962-c33d-4432-8b90-1155dbca7fb3"
-    const taskId = "b082ef4d-de0b-48ae-9e74-5e26073f45a6"
+    const todolistId = "509cebcf-5b5c-4955-b72f-744d695e15c4"
+    const taskId = "22bc1771-a655-480b-822d-d12ab750a806"
 
     useEffect(() => {
-        TaskAPI.updateTask(todolistId, taskId, "update Task").then(res => setTasks(res.data))
+        TaskAPI.updateTask(todolistId, taskId, "update TASK").then(res => setTasks(res.data.data))
     }, []);
 
     return <div>{JSON.stringify(tasks)}</div>
@@ -42,11 +42,11 @@ export const UpdateTask = () => {
 export const DeleteTask = () => {
     const [tasks, setTasks] = useState<any>(null)
 
-    const todolistId = "39669962-c33d-4432-8b90-1155dbca7fb3"
-    const taskId = "1f0aa56d-100d-41ca-8af1-52fb43a37a95"
+    const todolistId = "509cebcf-5b5c-4955-b72f-744d695e15c4"
+    const taskId = "ebbaf04d-1d66-4fe0-95a9-8d0485efbdac"
 
     useEffect(() => {
-        TaskAPI.deleteTask(todolistId, taskId, ).then(res => setTasks(res.data))
+        TaskAPI.deleteTask(todolistId, taskId, ).then(res => setTasks(res.data.data))
     }, []);
 
     return <div>{JSON.stringify(tasks)}</div>

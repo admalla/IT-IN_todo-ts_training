@@ -7,6 +7,7 @@ import {
     taskReducer,
     TasksType
 } from "./task-reducer";
+import {TaskPriorities, TaskStatuses} from "../../api/TaskAPI";
 
 let todoListId1: string;
 let todoListId2: string;
@@ -19,16 +20,72 @@ beforeEach(() => {
 
     tasks = {
         [todoListId1]: [
-            {id: v1(), title: "HTML&CSS", isDone: true},
-            {id: v1(), title: "JS", isDone: true},
-            {id: v1(), title: "ReactJS", isDone: false},
-            {id: v1(), title: "HTML", isDone: true},
-            {id: v1(), title: "CSS", isDone: false}
+            {id: v1(), title: "HTML&CSS", status: TaskStatuses.New,
+                todoListId: todoListId1,
+                priority: TaskPriorities.Low,
+                order: 0,
+                deadline: '',
+                startDate: '',
+                addedDate: '',
+                description: ''},
+            {id: v1(), title: "HTML&CSS", status: TaskStatuses.Completed,
+                todoListId: todoListId1,
+                priority: TaskPriorities.Low,
+                order: 0,
+                deadline: '',
+                startDate: '',
+                addedDate: '',
+                description: ''},
+            {id: v1(), title: "HTML&CSS", status: TaskStatuses.New,
+                todoListId: todoListId1,
+                priority: TaskPriorities.Low,
+                order: 0,
+                deadline: '',
+                startDate: '',
+                addedDate: '',
+                description: ''},
+            {id: v1(), title: "CSS", status: TaskStatuses.Completed,
+                todoListId: todoListId1,
+                priority: TaskPriorities.Low,
+                order: 0,
+                deadline: '',
+                startDate: '',
+                addedDate: '',
+                description: ''},
+            {id: v1(), title: "CSS", status: TaskStatuses.New,
+                todoListId: todoListId1,
+                priority: TaskPriorities.Low,
+                order: 0,
+                deadline: '',
+                startDate: '',
+                addedDate: '',
+                description: ''}
         ],
         [todoListId2]: [
-            {id: v1(), title: "Redux", isDone: true},
-            {id: v1(), title: "JSX", isDone: true},
-            {id: v1(), title: "Next", isDone: false},
+            {id: v1(), title: "HTML&CSS", status: TaskStatuses.Completed,
+                todoListId: todoListId2,
+                priority: TaskPriorities.Low,
+                order: 0,
+                deadline: '',
+                startDate: '',
+                addedDate: '',
+                description: ''},
+            {id: v1(), title: "HTML&CSS", status: TaskStatuses.Completed,
+                todoListId: todoListId2,
+                priority: TaskPriorities.Low,
+                order: 0,
+                deadline: '',
+                startDate: '',
+                addedDate: '',
+                description: ''},
+            {id: v1(), title: "HTML&CSS", status: TaskStatuses.New,
+                todoListId: todoListId2,
+                priority: TaskPriorities.Low,
+                order: 0,
+                deadline: '',
+                startDate: '',
+                addedDate: '',
+                description: ''},
         ]
     }
 })
@@ -36,7 +93,7 @@ beforeEach(() => {
 test("add new task", () => {
 
     const taskId = v1()
-    const endTasks = taskReducer(tasks, addNewTaskAC(todoListId2, taskId, "new Task"))
+    const endTasks = taskReducer(tasks, addNewTaskAC(todoListId2, "new Task"))
 
     expect(endTasks[todoListId2].length).toBe(4)
     expect(endTasks[todoListId2][0].title).toBe("new Task")
@@ -55,8 +112,8 @@ test("change checkbox task", () => {
     const taskId = tasks[todoListId2][0].id
     const endTasks = taskReducer(tasks, changeCheckBoxTaskAC(todoListId2, taskId))
 
-    expect(endTasks[todoListId2][0].isDone).not.toBe(true)
-    expect(endTasks[todoListId2][0].isDone).toBe(false)
+    expect(endTasks[todoListId2][0].status).not.toBe(2)
+    expect(endTasks[todoListId2][0].status).toBe(0)
 })
 test("change title task", () => {
 
