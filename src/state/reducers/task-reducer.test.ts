@@ -110,7 +110,7 @@ test("remove task", () => {
 test("change checkbox task", () => {
 
     const taskId = tasks[todoListId2][0].id
-    const endTasks = taskReducer(tasks, changeCheckBoxTaskAC(todoListId2, taskId))
+    const endTasks = taskReducer(tasks, changeCheckBoxTaskAC(todoListId2, taskId, 0))
 
     expect(endTasks[todoListId2][0].status).not.toBe(2)
     expect(endTasks[todoListId2][0].status).toBe(0)

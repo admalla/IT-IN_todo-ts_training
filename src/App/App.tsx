@@ -1,5 +1,5 @@
 import React from 'react';
-import {TodoList} from "../TodoList";
+import {TodoList} from "../components/TodoList";
 import AddItemTask from "../AddItemTask/AddItemTask";
 import {AppBar, Button, Container, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
@@ -19,7 +19,7 @@ function App() {
         onCheckBox,
         changeFilterTodoList
     } = useApp()
-    console.log(todoLists)
+
     return (
             <div className="App">
                 <AppBar position="static">

@@ -1,17 +1,17 @@
 import React, {useCallback, useEffect} from "react";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
-import './App/App.css'
-import AddItemTask from "./AddItemTask/AddItemTask";
-import EditableTitle from "./EditableTitle/EditableTitle";
+import '../App/App.css'
+import AddItemTask from "../AddItemTask/AddItemTask";
+import EditableTitle from "../EditableTitle/EditableTitle";
 import {Button, Stack} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Task} from "./Task";
-import {TaskAPIType, TaskStatuses} from "./api/TaskAPI";
-import {TypeFilter} from "./state/reducers/todoList-reducer";
+import {TaskAPIType, TaskStatuses} from "../api/TaskAPI";
+import {TypeFilter} from "../state/reducers/todoList-reducer";
 import {useDispatch} from "react-redux";
-import {getTasksFromServerTC} from "./state/reducers/task-reducer";
+import {getTasksFromServerTC} from "../state/reducers/task-reducer";
 import {ThunkDispatch} from "redux-thunk";
-import {AppRootState} from "./state/Store";
+import {AppRootState} from "../state/Store";
 import {AnyAction} from "redux";
 
 export type PropsType = {
@@ -21,7 +21,7 @@ export type PropsType = {
     removeTask: (id: string, todoListId: string) => void
     filterName: (str: TypeFilter, todoListId: string) => void
     addTask: (title: string, todoListId: string) => void
-    onCheckBox: (id: string, todoListId: string) => void
+    onCheckBox: (id: string, todoListId: string, isChecked: boolean) => void
     filter: TypeFilter
     removeTodoList: (todoListId: string) => void
     changeTitleTodoLists: (title: string, todoListId: string) => void

@@ -4,7 +4,7 @@ import {
     addTaskFromServerTC,
     changeCheckBoxTaskAC,
     removeTaskFromServerTC,
-    TasksType, updateTitleTaskFromServerTC
+    TasksType, updateStatusTaskTC, updateTitleTaskFromServerTC
 } from "../../state/reducers/task-reducer";
 import {useCallback, useEffect} from "react";
 import {
@@ -51,8 +51,9 @@ export const useApp = () => {
         dispatch(addTaskFromServerTC(todoListId, title))
     }, [])
 
-    const onCheckBox = useCallback((id: string, todoListId: string) => {
-        dispatch(changeCheckBoxTaskAC(todoListId, id))
+    const onCheckBox = useCallback((id: string, todoListId: string, isChecked: boolean) => {
+        const status = isChecked ? 2 : 0
+        dispatch(updateStatusTaskTC(todoListId, id, status))
     }, [])
 
     const changeTitleTask = useCallback((title: string, taskId: string, todoListId: string) => {

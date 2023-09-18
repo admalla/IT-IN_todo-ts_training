@@ -33,7 +33,7 @@ export const UpdateTask = () => {
     const taskId = "22bc1771-a655-480b-822d-d12ab750a806"
 
     useEffect(() => {
-        TaskAPI.updateTask(todolistId, taskId, "update TASK").then(res => setTasks(res.data.data))
+        TaskAPI.updateTask(todolistId, taskId, {title: "update TASK", status: 0}).then(res => setTasks(res.data.data))
     }, []);
 
     return <div>{JSON.stringify(tasks)}</div>
