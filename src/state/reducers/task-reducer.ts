@@ -1,6 +1,10 @@
 import {AddTodoListAT, getTodoListDomainAT, RemoveTodoListAT} from "./todoList-reducer";
 import {TaskAPI, TaskAPIType, TaskPriorities, TaskStatuses} from "../../api/TaskAPI";
 import {AppRootState, AppThunk} from "../Store";
+import {setErrorAC, setStatusAC} from "./app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
+import axios from 'axios'
+import {PayloadAction} from "@reduxjs/toolkit";
 
 const initialState: TasksType = {}
 
@@ -108,18 +112,42 @@ export const getTasksFromServerTC = (todolistId: string): AppThunk => async disp
 }
 export const removeTaskFromServerTC = (todolistId: string, taskId: string): AppThunk => async dispatch => {
     try {
+        dispatch(setStatusAC('loading'))
         const res = await TaskAPI.deleteTask(todolistId, taskId)
         dispatch(removeTaskAC(todolistId, taskId))
     }catch (e) {
-        throw new Error(`${e}`)
+        if(axios.isAxiosError(e)) {
+            handleServerNetworkError(dispatch, e.message)
+            dispatch(setStatusAC('success'))
+        } else {
+            handleServerNetworkError(dispatch, (e as Error).message)
+        }
+    } finally {
+        dispatch(setStatusAC('idle'))
     }
 }
 export const addTaskFromServerTC = (todolistId: string, title: string): AppThunk => async dispatch => {
     try {
-        const res = await TaskAPI.createTask(todolistId, title)
-        dispatch(addNewTaskAC(todolistId, title))
+        if(title.length > 100) {
+            dispatch(setErrorAC('Must be under 100 characters'))
+        } else {
+            dispatch(setStatusAC("loading"))
+            const res = await TaskAPI.createTask(todolistId, title)
+            if(res.data.resultCode === RESULT_CODE.SUCCESS) {
+                dispatch(addNewTaskAC(todolistId, title))
+                dispatch(setStatusAC("success"))
+            } else {
+                handleServerAppError(dispatch,res.data)
+            }
+        }
     } catch (e) {
-        throw new Error(`${e}`)
+        if(axios.isAxiosError(e)){
+            handleServerNetworkError(dispatch, e.message)
+        } else {
+            handleServerNetworkError(dispatch, (e as Error).message)
+        }
+    } finally {
+        dispatch(setStatusAC("idle"))
     }
 }
 export const updateTitleTaskFromServerTC = (todolistId: string, taskId: string, title: string): AppThunk => async (dispatch, getState: () => AppRootState) => {
@@ -129,10 +157,22 @@ export const updateTitleTaskFromServerTC = (todolistId: string, taskId: string, 
         return t.id === taskId
     })
     try {
+        dispatch(setStatusAC('loading'))
         const res  = await TaskAPI.updateTask(todolistId, taskId, {title, status: task?.status})
-        dispatch(changeTitleTaskAC(todolistId, taskId, title))
+        if(res.data.resultCode === RESULT_CODE.SUCCESS) {
+            dispatch(changeTitleTaskAC(todolistId, taskId, title))
+            dispatch(setStatusAC("success"))
+        } else {
+            handleServerAppError(dispatch,res.data)
+        }
     } catch (e) {
-        throw new Error(`${e}`)
+        if(axios.isAxiosError(e)) {
+            handleServerNetworkError(dispatch, e.message)
+        } else {
+            handleServerNetworkError(dispatch, (e as Error).message)
+        }
+    } finally {
+        dispatch(setStatusAC("idle"))
     }
 }
 export const updateStatusTaskTC = (todoListId: string, taskId: string, status: TaskStatuses): AppThunk => async (dispatch, getState: () => AppRootState) => {
@@ -143,15 +183,25 @@ export const updateStatusTaskTC = (todoListId: string, taskId: string, status: T
     })
     try {
         if(task) {
+            dispatch(setStatusAC('loading'))
             const res =
                 await TaskAPI.updateTask(todoListId, taskId, {title: task.title, status})
-            dispatch(changeCheckBoxTaskAC(todoListId, taskId, status))
+            if(res.data.resultCode === RESULT_CODE.SUCCESS) {
+                dispatch(changeCheckBoxTaskAC(todoListId, taskId, status))
+                dispatch(setStatusAC('success'))
+            } else {
+                handleServerAppError(dispatch,res.data)
+            }
         }
     } catch (e) {
-        throw new Error(`${e}`)
+        if(axios.isAxiosError(e)) {
+            handleServerNetworkError(dispatch, e.message)
+        } else {
+            handleServerNetworkError(dispatch, (e as Error).message)
+        }
+    } finally {
+        dispatch(setStatusAC('idle'))
     }
-
-
 }
 
 //...types
@@ -168,3 +218,18 @@ export type TaskActionsType =
     | AddTodoListAT
     | getTodoListDomainAT
     | ReturnType<typeof getTasksFromServerAC>
+
+enum RESULT_CODE {
+    SUCCESS = 0
+}
+
+type ErrorType = {
+    "statusCode": 0,
+    "messages":[
+        {
+            "message": string,
+            "field": string
+        }
+    ],
+    "error": string
+}

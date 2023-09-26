@@ -31,10 +31,10 @@ type ItemsType = {
     items: Array<TaskAPIType>
 }
 
-type TaskGeneralResponseType<T = {}> = {
+export type TaskGeneralResponseType<T = {}> = {
     data: T
     fieldsErrors: []
-    messages: []
+    messages: string[]
     resultCode: number
 }
 

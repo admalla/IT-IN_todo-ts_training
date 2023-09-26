@@ -4,6 +4,7 @@ import {useAddItemTask} from "./hook/useAddItemTask";
 
 type AddItemTaskPropsType = {
     addItem: (title: string) => void
+    disabled?: boolean
 }
 
 const AddItemTask = React.memo((props: AddItemTaskPropsType) => {
@@ -25,9 +26,10 @@ const AddItemTask = React.memo((props: AddItemTaskPropsType) => {
                 onChange={onChangeHandler}
                 onKeyDown={onKeyPressHandler}
                 helperText={error && "Заполните строку!"}
+                disabled={props.disabled}
             />
             <Button style={{marginLeft: '10px'}} variant={"contained"} size={"small"}
-                    onClick={onClickHandler}>+</Button>
+                    onClick={onClickHandler} disabled={props.disabled}>+</Button>
 
             <div style={{color: "red"}}>{error ? error : ''}</div>
         </div>

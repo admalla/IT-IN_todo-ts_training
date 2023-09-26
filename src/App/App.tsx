@@ -5,6 +5,11 @@ import {AppBar, Button, Container, IconButton, Paper, Toolbar, Typography} from 
 import MenuIcon from '@mui/icons-material/Menu';
 import Grid from "@mui/material/Unstable_Grid2";
 import {useApp} from "./hook/useApp";
+import LinearProgress from "@mui/material/LinearProgress";
+import {ErrorSnackbar} from "../components/common/ErrorSnackBar";
+import {useSelector} from "react-redux";
+import {AppRootState} from "../state/Store";
+import {TodolistStatusType} from "../state/reducers/app-reducer";
 
 function App() {
     const {
@@ -19,6 +24,9 @@ function App() {
         onCheckBox,
         changeFilterTodoList
     } = useApp()
+
+    const statusTodo =
+        useSelector<AppRootState, TodolistStatusType>(state => state.app.status)
 
     return (
             <div className="App">
@@ -39,6 +47,8 @@ function App() {
                         <Button color="inherit">Login</Button>
                     </Toolbar>
                 </AppBar>
+                {statusTodo === 'loading' && <LinearProgress/>}
+                <ErrorSnackbar />
             <Container maxWidth='xl' >
                 <Grid container style={{padding: "20px"}} >
                     <AddItemTask addItem={addTodoList} />
@@ -50,6 +60,7 @@ function App() {
                                 <TodoList
                                     id={ tl.id}
                                     title={tl.title}
+                                    statusTodo={tl.statusTD}
                                     tasks={tasks[tl.id]}
                                     removeTask={removeTask}
                                     filterName={changeFilterTodoList}

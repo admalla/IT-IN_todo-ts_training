@@ -3,7 +3,7 @@ import {useAutoAnimate} from "@formkit/auto-animate/react";
 import '../App/App.css'
 import AddItemTask from "../AddItemTask/AddItemTask";
 import EditableTitle from "../EditableTitle/EditableTitle";
-import {Button, Stack} from "@mui/material";
+import {Button, IconButton, Stack} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Task} from "./Task";
 import {TaskAPIType, TaskStatuses} from "../api/TaskAPI";
@@ -13,10 +13,12 @@ import {getTasksFromServerTC} from "../state/reducers/task-reducer";
 import {ThunkDispatch} from "redux-thunk";
 import {AppRootState} from "../state/Store";
 import {AnyAction} from "redux";
+import {TodolistStatusType} from "../state/reducers/app-reducer";
 
 export type PropsType = {
     id: string
     title: string,
+    statusTodo: TodolistStatusType,
     tasks: Array<TaskAPIType>
     removeTask: (id: string, todoListId: string) => void
     filterName: (str: TypeFilter, todoListId: string) => void
@@ -60,13 +62,20 @@ export const TodoList = React.memo( (props: PropsType) => {
 
 //Animation for li
     const [listRef] = useAutoAnimate<HTMLUListElement>()
+
     return (
         <div>
             <div>
                 <EditableTitle title={props.title} callBack={newTitleTodoList}/>
-                <DeleteIcon style={{margin: "0 5px", cursor: 'pointer'}} onClick={() => props.removeTodoList(props.id)}
-                            fontSize={"small"}/>
-                <AddItemTask addItem={addTask}/>
+                <IconButton
+                    disabled={props.statusTodo === 'loading'}
+                    color="secondary"
+                    aria-label="delete"
+                    onClick={() => props.removeTodoList(props.id)}
+                >
+                    <DeleteIcon />
+                </IconButton>
+                <AddItemTask addItem={addTask} disabled={props.statusTodo === 'loading'}/>
                 <ul ref={listRef}>
                     {filteredTasks.map((task: TaskAPIType) =>
                         <Task

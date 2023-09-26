@@ -17,8 +17,8 @@ beforeEach(() => {
     todoListId2 = v1()
 
     todoLists = [
-        {id: todoListId1, title: "React", filter: 'all', order: 0, addedDate: ''},
-        {id: todoListId2, title: "JavaScript", filter: "all", order: 0, addedDate: ''}
+        {id: todoListId1, title: "React", filter: 'all', statusTD: 'idle', order: 0, addedDate: ''},
+        {id: todoListId2, title: "JavaScript", filter: "all", statusTD: 'idle', order: 0, addedDate: ''}
     ]
 })
 

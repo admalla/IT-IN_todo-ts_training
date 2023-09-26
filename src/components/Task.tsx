@@ -1,7 +1,8 @@
 import React from "react";
 import EditableTitle from "../EditableTitle/EditableTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {TaskAPIType} from "../api/TaskAPI";
+import {TaskAPIType, TaskStatuses} from "../api/TaskAPI";
+import {IconButton} from "@mui/material";
 
 type TaskPropsType = {
     onCheckBox: (id: string, todoListId: string, isChecked: boolean) => void
@@ -16,7 +17,7 @@ export const Task = React.memo((props: TaskPropsType) => {
     }
 
     const onCheckBoxHandler = (e: React.ChangeEvent<HTMLInputElement> ) => {
-        console.log(props.task.status)
+
         props.onCheckBox(props.task.id, props.todoListId, e.currentTarget.checked)
     }
     return (
@@ -27,9 +28,13 @@ export const Task = React.memo((props: TaskPropsType) => {
                 onChange={onCheckBoxHandler}
             />
             <EditableTitle title={props.task.title} callBack={newTitleTask}/>
-            <DeleteIcon style={{margin: "0 5px", cursor: 'pointer'}}
-                        onClick={() => props.removeTask(props.task.id, props.todoListId)}
-                        fontSize={"small"}/>
+            <IconButton
+                color="secondary"
+                aria-label="delete"
+                onClick={() => props.removeTask(props.task.id, props.todoListId)}
+            >
+                <DeleteIcon />
+            </IconButton>
         </li>
     )
 })

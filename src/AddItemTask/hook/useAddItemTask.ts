@@ -13,7 +13,9 @@ export const useAddItemTask = (onAddItem: (title: string) => void) => {
     const onKeyPressHandler = (e:  React.KeyboardEvent<HTMLInputElement>) => {
         if (title.trim() && e.key === 'Enter') {
             onAddItem(title);
-            setTitle('');
+            if(title.length < 100) {
+                setTitle('');
+            }
         } else {
             !error && setError(true)
         }
@@ -22,7 +24,9 @@ export const useAddItemTask = (onAddItem: (title: string) => void) => {
     const onClickHandler = () => {
         if(title.trim()) {
             onAddItem(title )
-            setTitle('')
+            if(title.length < 100) {
+                setTitle('')
+            }
         } else {
             !error && setError(true)
         }
