@@ -1,12 +1,11 @@
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "../../state/Store";
+import {AppRootState, useAppSelector} from "../../state/Store";
 import {
     addTaskFromServerTC,
-    changeCheckBoxTaskAC,
     removeTaskFromServerTC,
     TasksType, updateStatusTaskTC, updateTitleTaskFromServerTC
 } from "../../state/reducers/task-reducer";
-import {useCallback, useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {
     addTodolistFromServerTC,
     changeFilterTodoListAC, changeTitleTLFromServerTC,
@@ -14,15 +13,27 @@ import {
 } from "../../state/reducers/todoList-reducer";
 import {ThunkDispatch} from "redux-thunk";
 import {AnyAction} from "redux";
+import Grid from "@mui/material/Unstable_Grid2";
+import AddItemTask from "../../AddItemTask/AddItemTask";
+import {Paper} from "@mui/material";
+import {TodoList} from "./TodoList";
+import {Navigate} from "react-router-dom";
 
-export const useApp = () => {
+export type DemoType = {
+    demo?: boolean
+}
+
+export const TodoListsList = ({demo}: DemoType) => {
 
     const dispatch = useDispatch<ThunkDispatch<AppRootState, any, AnyAction>>()
 
     const todoLists = useSelector<AppRootState, Array<TodoListWithFilterType>>(state => state.todoLists)
     const tasks = useSelector<AppRootState, TasksType>(state => state.tasks)
+    const isLogin = useAppSelector(state => state.auth.isLogin)
 
     useEffect(() => {
+        if (!isLogin) return;
+        if (demo) return;
         dispatch(getTodoListDomainTC())
     }, []);
 
@@ -60,16 +71,38 @@ export const useApp = () => {
         dispatch(updateTitleTaskFromServerTC(todoListId, taskId, title))
     }, [])
 
-    return {
-        tasks,
-        todoLists,
-        addTodoList,
-        removeTask,
-        changeFilterTodoList,
-        addTask,
-        onCheckBox,
-        removeTodoList,
-        changeTitleTodoLists,
-        changeTitleTask
+    if (!isLogin) {
+        return <Navigate to="/login"/>
     }
+
+    return (
+        <div>
+            <Grid container style={{padding: "20px"}}>
+                <AddItemTask addItem={addTodoList}/>
+            </Grid>
+            <Grid container spacing={3}>
+                {todoLists.map(tl => {
+                    return <Grid key={tl.id}>
+                        <Paper style={{padding: "10px"}}>
+                            <TodoList
+                                id={tl.id}
+                                title={tl.title}
+                                statusTodo={tl.statusTD}
+                                tasks={tasks[tl.id]}
+                                removeTask={removeTask}
+                                filterName={changeFilterTodoList}
+                                addTask={addTask}
+                                onCheckBox={onCheckBox}
+                                filter={tl.filter}
+                                removeTodoList={removeTodoList}
+                                changeTitleTodoLists={changeTitleTodoLists}
+                                changeTitleTask={changeTitleTask}
+                                demo={demo}
+                            />
+                        </Paper>
+                    </Grid>
+                })}
+            </Grid>
+        </div>
+    )
 }

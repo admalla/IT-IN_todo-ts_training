@@ -1,19 +1,19 @@
 import React, {useCallback, useEffect} from "react";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
-import '../App/App.css'
-import AddItemTask from "../AddItemTask/AddItemTask";
-import EditableTitle from "../EditableTitle/EditableTitle";
+import '../../App/App.css'
+import AddItemTask from "../../AddItemTask/AddItemTask";
+import EditableTitle from "../../EditableTitle/EditableTitle";
 import {Button, IconButton, Stack} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import {Task} from "./Task";
-import {TaskAPIType, TaskStatuses} from "../api/TaskAPI";
-import {TypeFilter} from "../state/reducers/todoList-reducer";
+import {Task} from "../Task";
+import {TaskAPIType, TaskStatuses} from "../../api/TaskAPI";
+import {TypeFilter} from "../../state/reducers/todoList-reducer";
 import {useDispatch} from "react-redux";
-import {getTasksFromServerTC} from "../state/reducers/task-reducer";
+import {getTasksFromServerTC} from "../../state/reducers/task-reducer";
 import {ThunkDispatch} from "redux-thunk";
-import {AppRootState} from "../state/Store";
+import {AppRootState} from "../../state/Store";
 import {AnyAction} from "redux";
-import {TodolistStatusType} from "../state/reducers/app-reducer";
+import {TodolistStatusType} from "../../state/reducers/app-reducer";
 
 export type PropsType = {
     id: string
@@ -28,13 +28,15 @@ export type PropsType = {
     removeTodoList: (todoListId: string) => void
     changeTitleTodoLists: (title: string, todoListId: string) => void
     changeTitleTask: (title: string, taskId: string, todoLIstId: string) => void
+    demo?: boolean
 }
 
-export const TodoList = React.memo( (props: PropsType) => {
+export const TodoList = React.memo( ({demo, ...props}: PropsType) => {
 
     const dispatch = useDispatch<ThunkDispatch<AppRootState, any, AnyAction> >()
 
     useEffect(() => {
+        if(demo) return
         dispatch(getTasksFromServerTC(props.id))
     }, []);
 

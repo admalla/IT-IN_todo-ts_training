@@ -1,14 +1,12 @@
-import {v1} from "uuid";
 import {AppReducer, initialStateType, setStatusAC} from "./app-reducer";
 
-let todoListId1: string;
-let todoListId2: string;
 
 let todoLists: initialStateType
 
 beforeEach(() => {
 
     todoLists = {
+        isInitialized: false,
         status: 'idle',
         error: "eroorrrrrr"
     }
@@ -16,7 +14,7 @@ beforeEach(() => {
 
 test("add todoList", () => {
 
-    const todoListId = v1()
+
     const endTodoList = AppReducer(todoLists, setStatusAC('loading'))
 
     expect(endTodoList.status).toBe('loading')

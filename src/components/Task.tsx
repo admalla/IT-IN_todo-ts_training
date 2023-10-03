@@ -1,7 +1,7 @@
 import React from "react";
 import EditableTitle from "../EditableTitle/EditableTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {TaskAPIType, TaskStatuses} from "../api/TaskAPI";
+import {TaskAPIType} from "../api/TaskAPI";
 import {IconButton} from "@mui/material";
 
 type TaskPropsType = {
