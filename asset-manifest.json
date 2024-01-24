@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/IT-IN_todo-ts_training/static/css/main.a108bdfd.css",
-    "main.js": "/IT-IN_todo-ts_training/static/js/main.ac7b494e.js",
+    "main.js": "/IT-IN_todo-ts_training/static/js/main.dcc314b8.js",
     "index.html": "/IT-IN_todo-ts_training/index.html",
     "main.a108bdfd.css.map": "/IT-IN_todo-ts_training/static/css/main.a108bdfd.css.map",
-    "main.ac7b494e.js.map": "/IT-IN_todo-ts_training/static/js/main.ac7b494e.js.map"
+    "main.dcc314b8.js.map": "/IT-IN_todo-ts_training/static/js/main.dcc314b8.js.map"
   },
   "entrypoints": [
     "static/css/main.a108bdfd.css",
-    "static/js/main.ac7b494e.js"
+    "static/js/main.dcc314b8.js"
   ]
 }
