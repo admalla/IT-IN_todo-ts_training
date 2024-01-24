@@ -15,7 +15,7 @@ export const taskReducer = (state: TasksType = initialState, action: TaskActions
                 ...state,
                 [action.todoListId]:
                     [{
-                        id: '',
+                        id: action.taskId,
                         title: action.title,
                         status: TaskStatuses.New,
                         todoListId: action.todoListId,
@@ -72,9 +72,10 @@ export const taskReducer = (state: TasksType = initialState, action: TaskActions
 }
 
 //....actions
-export const addNewTaskAC = (todoListId: string, title: string) => ({
+export const addNewTaskAC = (todoListId: string, taskId: string, title: string) => ({
     type: "ADD-TASK",
     todoListId,
+    taskId,
     title
 }as const )
 export const removeTaskAC = (todoListId: string, taskId: string) => ({
@@ -134,7 +135,7 @@ export const addTaskFromServerTC = (todolistId: string, title: string): AppThunk
             dispatch(setStatusAC("loading"))
             const res = await TaskAPI.createTask(todolistId, title)
             if(res.data.resultCode === RESULT_CODE.SUCCESS) {
-                dispatch(addNewTaskAC(todolistId, title))
+                dispatch(addNewTaskAC(todolistId, res.data.data.item.id, title))
                 dispatch(setStatusAC("success"))
             } else {
                 handleServerAppError(dispatch,res.data)

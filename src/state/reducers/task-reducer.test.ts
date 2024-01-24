@@ -93,7 +93,7 @@ beforeEach(() => {
 test("add new task", () => {
 
     const taskId = v1()
-    const endTasks = taskReducer(tasks, addNewTaskAC(todoListId2, "new Task"))
+    const endTasks = taskReducer(tasks, addNewTaskAC(todoListId2, taskId, "new Task"))
 
     expect(endTasks[todoListId2].length).toBe(4)
     expect(endTasks[todoListId2][0].title).toBe("new Task")

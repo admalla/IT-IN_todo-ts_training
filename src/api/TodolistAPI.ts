@@ -1,5 +1,5 @@
 import {instance} from "./instance";
-import {TodoListWithFilterType} from "../state/reducers/todoList-reducer";
+import {TodoListWithFilterType} from "state/reducers/todoList-reducer";
 
 export type TodoListAPIType = {
     id: string

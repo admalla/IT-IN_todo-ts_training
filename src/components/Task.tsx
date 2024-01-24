@@ -17,7 +17,6 @@ export const Task = React.memo((props: TaskPropsType) => {
     }
 
     const onCheckBoxHandler = (e: React.ChangeEvent<HTMLInputElement> ) => {
-
         props.onCheckBox(props.task.id, props.todoListId, e.currentTarget.checked)
     }
     return (

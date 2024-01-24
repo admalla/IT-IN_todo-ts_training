@@ -28,7 +28,7 @@ export enum TaskPriorities {
     Later = 4
 }
 type ItemsType = {
-    items: Array<TaskAPIType>
+    item: TaskAPIType
 }
 
 export type TaskGeneralResponseType<T = {}> = {
