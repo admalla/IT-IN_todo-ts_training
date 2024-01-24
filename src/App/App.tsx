@@ -5,7 +5,6 @@ import {
   CircularProgress,
   Container,
   IconButton,
-  Paper,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -81,7 +80,7 @@ function App({ demo = false }: DemoType) {
           <Route path="/login" element={<Login />} />
           <Route path="/404" element={<h1>404 not founded</h1>} />
           <Route path="*" element={<Navigate to="/404" />} />
-          <Route path="/" element={<TodoListsList demo={demo} />} />
+          <Route path="/IT-IN_todo-ts_training" element={<TodoListsList demo={demo} />} />
         </Routes>
       </Container>
     </div>
